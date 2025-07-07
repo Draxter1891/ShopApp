@@ -1,0 +1,43 @@
+import { View, Text, ImageBackground, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { LoaderKitView } from 'react-native-loader-kit';
+
+const Splash = ({ navigation }: any) => {
+  const [loading, setloading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Signin');
+    }, 1000);
+  }, []);
+
+  return (
+    <ImageBackground
+      source={require('../assets/images/splash.png')}
+      style={{ flex: 1, justifyContent: 'center' }}
+      resizeMode="cover"
+    >
+      <Text
+        style={{
+          color: '#fff',
+          fontSize: 50,
+          fontWeight: '600',
+          position: 'absolute',
+          bottom: '30%',
+          alignSelf:'center'
+        }}
+      >
+        Shop
+      </Text>
+      {loading && <LoaderKitView
+        style={{ width: 30, height: 30,position:'absolute', bottom:'20%',alignSelf:'center'
+         }}
+        name={'BallPulseSync'}
+        animationSpeedMultiplier={0.8} // speed up/slow down animation, default: 1.0, larger is faster
+        color={'#e7f6fa'} // Optional: color can be: 'red', 'green',... or '#ddd', '#ffffff',...
+      />}
+      
+    </ImageBackground>
+  );
+};
+
+export default Splash;
