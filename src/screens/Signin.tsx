@@ -8,17 +8,19 @@ import {
 } from 'react-native';
 import React from 'react';
 import RoundedButtons from '../components/RoundedButtons';
+import Header from '../components/Header';
 
-const Signin = () => {
+const Signin = ({navigation}:any) => {
   return (
     <View style={styles.container}>
+      <Header style={styles.logo} text={"Shop."}/>
       <Text style={styles.heading}>Hello!</Text>
       <Text style={styles.subheading}>Welcome to our shop.</Text>
       <View style={styles.btnContainer}>
         <TouchableOpacity
           style={styles.button}
           onPress={()=>{
-            Alert.alert('Login pressed');
+            navigation.navigate("Home")
           }}
         >
           <Text style={styles.btnTxt}>Login</Text>
@@ -35,7 +37,7 @@ const Signin = () => {
           ]}
           underlayColor="#d3dceb"
           onPress={() => {
-            Alert.alert('Signup pressed');
+            navigation.navigate("Signup")
           }}
         >
           <Text style={[styles.btnTxt, { color: '#5d6470' }]}>Signup</Text>
@@ -60,6 +62,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#e7f6fa',
+  },
+  logo:{
+    fontSize:35,
+    fontWeight:'bold',
+    color:'#1e4266'
   },
   heading: {
     fontSize: 35,
@@ -86,4 +93,5 @@ const styles = StyleSheet.create({
     color: '#e7f6fa',
     fontWeight: '600',
   },
+  
 });
