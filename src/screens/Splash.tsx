@@ -5,7 +5,9 @@ import { LoaderKitView } from 'react-native-loader-kit';
 const Splash = ({ navigation }: any) => {
   const [loading, setloading] = useState(true);
   useEffect(() => {
+    setloading(true);
     setTimeout(() => {
+      setloading(false);
       navigation.replace('Signin');
     }, 1000);
   }, []);
