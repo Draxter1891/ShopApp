@@ -6,27 +6,60 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import RoundedButtons from '../components/RoundedButtons';
 import Header from '../components/Header';
+import { _signinWithGoogle, logout } from '../config/firebase/GoogleSignin';
+import { SignInParams } from '@react-native-google-signin/google-signin';
+// import { useDispatch } from 'react-redux';
+// import { AppDispatch } from '../redux/Store';
 
 const Signin = ({navigation}:any) => {
+  // const [data, setdata] = useState([])
+  // const dispatch = useDispatch<AppDispatch>();
+
+  //SIGNIN
+  const googleSignin = async (): Promise<void> => {
+  try {
+    const res:any = await _signinWithGoogle();
+    
+    if (!res) {
+      console.log('❌ Error: No data found');
+      return;
+    }
+    const {data} = res;
+
+    console.log('✅ Successfully signed in with Google:', data?.user.name);
+
+    navigation.replace('Profile',{
+      image:data?.user.photo,
+      fname:data?.user.givenName,
+      lname:data?.user.familyName,
+      email:data?.user.email
+    })
+
+  } catch (error) {
+    console.error('🚨 Google Sign-In failed:', error);
+  }
+
+
+};
   return (
     <View style={styles.container}>
       <Header style={styles.logo} text={"Shop."}/>
       <Text style={styles.heading}>Hello!</Text>
       <Text style={styles.subheading}>Welcome to our shop.</Text>
       <View style={styles.btnContainer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.button}
           onPress={()=>{
             navigation.navigate("Home")
           }}
         >
           <Text style={styles.btnTxt}>Login</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <TouchableHighlight
+        {/* <TouchableHighlight
           style={[
             styles.button,
             {
@@ -41,10 +74,10 @@ const Signin = ({navigation}:any) => {
           }}
         >
           <Text style={[styles.btnTxt, { color: '#5d6470' }]}>Signup</Text>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
       </View>
-      <Text style={{ marginTop: 30, color: '#747c8a' }}>or login with </Text>
-      <TouchableOpacity style={{position:'absolute',bottom:'15%'}}>
+      <Text style={{ marginTop: 20, color: '#747c8a' }}>login with your google account to continue</Text>
+      <TouchableOpacity style={{position:'absolute',bottom:'30%'}} onPress={googleSignin}>
         <RoundedButtons
           image={require('../assets/images/googleLogo.png')}
           bg={'#fff'}
