@@ -13,7 +13,7 @@ const Splash = ({ navigation }: any) => {
     setTimeout(() => {
       setloading(false);
       if (user.isLoggedIn) {
-        navigation.replace('Profile');
+        navigation.replace('Cart');
       } else {
         navigation.replace('Signin');
       }
@@ -48,8 +48,8 @@ const Splash = ({ navigation }: any) => {
             alignSelf: 'center',
           }}
           name={'BallPulseSync'}
-          animationSpeedMultiplier={0.8} // speed up/slow down animation, default: 1.0, larger is faster
-          color={'#e7f6fa'} // Optional: color can be: 'red', 'green',... or '#ddd', '#ffffff',...
+          animationSpeedMultiplier={0.8} 
+          color={'#e7f6fa'} 
         />
       )}
     </ImageBackground>

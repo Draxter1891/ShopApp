@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/Store';
 import { toggleFavorite } from '../redux/slices/favouriteSlice';
 import ProductsCard from '../components/ProductsCard';
+import { addToCart } from '../redux/slices/cartSlice';
 
 
 interface Product {
@@ -62,7 +63,7 @@ const Home = () => {
         <ProductsCard
           product={{ ...item, isFav }}
           onToggleFavourite={() => handleToggleFavorite(item)}
-          onAddToCart={() => Alert.alert('Item added to cart')}
+          onAddToCart={() => dispatch(addToCart(item))}
         />
       );
     },
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#f4f4f4',
   },
   heading: {
     fontSize: 35,

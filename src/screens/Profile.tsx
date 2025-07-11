@@ -32,19 +32,6 @@ const Profile = ({ navigation }: any) => {
     }
   };
 
-  const handlePayment = async () => {
-    try {
-      const data = await startPayment({
-        amount: 101,
-        name: user.fname + ' ' + user.lname,
-        email: user.email,
-        contact: '9650727640',
-      });
-      Alert.alert('Payment Successful', JSON.stringify(data));
-    } catch (error: any) {
-      Alert.alert('Payment Failed', error?.description || 'Something went wrong');
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -55,10 +42,6 @@ const Profile = ({ navigation }: any) => {
 
       <TouchableOpacity style={styles.logoutBtn} onPress={onlogout}>
         <Text style={styles.logoutText}>Logout</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.paymentBtn} onPress={handlePayment}>
-        <Text style={styles.paymentText}>Pay ₹101</Text>
       </TouchableOpacity>
     </View>
   );

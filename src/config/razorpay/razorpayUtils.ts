@@ -5,19 +5,19 @@ export const startPayment = ({
   currency = 'INR',
   name,
   email,
-  contact,
+  // contact,
   description = 'Your Purchase',
 }: {
   amount: number;
   currency?: string;
   name: string;
   email: string;
-  contact: string;
+  // contact: string;
   description?: string;
 }) => {
   const options: any = {
     description,
-    image: 'https://your-logo-url.png',
+    image: 'https://drive.google.com/uc?export=view&id=1xQLIg-QAQyeauAAXBZ0YeUEn7fMS9jAk',
     currency,
     key: 'rzp_test_928yd8fXq9Ph5E',
     amount: amount * 100,
@@ -25,7 +25,7 @@ export const startPayment = ({
     order_id: null,
     prefill: {
       email,
-      contact,         
+      // contact,         
       name,
     },
     theme: { color: '#3399cc' },

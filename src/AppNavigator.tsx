@@ -8,6 +8,7 @@ import Signin from './screens/Signin';
 import Home from './screens/Home';
 import Profile from './screens/Profile';
 import Favourite from './screens/Favourite';
+import CartScreen from './screens/Cart';
 
 
 const STACK = createStackNavigator();
@@ -21,6 +22,7 @@ const AppNavigator = () => {
             <STACK.Screen name="Home" component={Home}/>
             <STACK.Screen name="Profile" component={Profile}/>
             <STACK.Screen name="Favourite" component={Favourite}/>
+            <STACK.Screen name="Cart" component={CartScreen}/>
         </STACK.Navigator>
     </NavigationContainer>
   )
