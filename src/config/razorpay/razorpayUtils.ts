@@ -25,7 +25,7 @@ export const startPayment = ({
     order_id: null,
     prefill: {
       email,
-      contact,
+      contact,         
       name,
     },
     theme: { color: '#3399cc' },
@@ -33,3 +33,4 @@ export const startPayment = ({
 
   return RazorpayCheckout.open(options);
 };
+                                                                                                                                    
