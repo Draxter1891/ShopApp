@@ -1,29 +1,43 @@
-import { Alert, Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { useRoute } from '@react-navigation/native';
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React from 'react';
 import { logout } from '../config/firebase/GoogleSignin';
 import { startPayment } from '../config/razorpay/razorpayUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/Store';
+import { clearUser } from '../redux/slices/userSlice';
 
-const Profile = ({navigation}:any) => {
-    const route = useRoute();
-  const { image, fname, lname, email } = route.params as {
-    image: string;
-    fname: string;
-    lname: string;
-    email: string;
-  };
-    console.log(image,fname,lname,email)
-    const onlogout = async()=>{
-        await logout();
-        Alert.alert("logout successful")
-        navigation.navigate('Signin')
+const Profile = ({ navigation }: any) => {
+  const user = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onlogout = async () => {
+    try {
+      await logout();
+      dispatch(clearUser());
+      Alert.alert('✅ Logout successful');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Signin' }],
+      });
+    } catch (error: any) {
+      console.error('Logout failed:', error);
+      Alert.alert('Logout failed', error.message || 'Something went wrong');
     }
-    const handlePayment = async () => {
+  };
+
+  const handlePayment = async () => {
     try {
       const data = await startPayment({
         amount: 101,
-        name: 'Rishabh Tripathi',
-        email: 'temp062401@gmail.com',
+        name: user.fname + ' ' + user.lname,
+        email: user.email,
         contact: '9650727640',
       });
       Alert.alert('Payment Successful', JSON.stringify(data));
@@ -31,22 +45,77 @@ const Profile = ({navigation}:any) => {
       Alert.alert('Payment Failed', error?.description || 'Something went wrong');
     }
   };
+
   return (
-    <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-      <Image source={{uri:image}} style={{width:50,height:50}}/>
-      <Text>{fname}</Text>
-      <Text>{lname}</Text>
-      <Text>{email}</Text>
-      <Button title='logout' onPress={onlogout}/>
-      <TouchableOpacity style={{justifyContent:'center',alignItems:'center',backgroundColor:'#000', width:'30%',alignSelf:'center',marginTop:20,borderRadius:30}}
-      onPress={handlePayment}
-      >
-        <Text style={{fontSize:18,fontWeight:'500', paddingHorizontal:12,paddingVertical:10,color:'#fff'}}>Pay here</Text>
+    <View style={styles.container}>
+      <Image source={{ uri: user.photoURL }} style={styles.avatar} />
+
+      <Text style={styles.name}>{user.fname} {user.lname}</Text>
+      <Text style={styles.email}>{user.email}</Text>
+
+      <TouchableOpacity style={styles.logoutBtn} onPress={onlogout}>
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.paymentBtn} onPress={handlePayment}>
+        <Text style={styles.paymentText}>Pay ₹101</Text>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f7f9fc',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  avatar: {
+    width: 110,
+    height: 110,
+    borderRadius: 100,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#e0e0e0',
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#222',
+    marginTop: 4,
+  },
+  email: {
+    fontSize: 15,
+    color: '#666',
+    marginBottom: 20,
+  },
+  logoutBtn: {
+    marginTop: 30,
+    backgroundColor: '#ff3b3b',
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  paymentBtn: {
+    marginTop: 20,
+    backgroundColor: '#1c468a',
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    elevation: 2,
+  },
+  paymentText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});

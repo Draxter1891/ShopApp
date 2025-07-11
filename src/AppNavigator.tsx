@@ -7,6 +7,7 @@ import Signup from './screens/Signup';
 import Signin from './screens/Signin';
 import Home from './screens/Home';
 import Profile from './screens/Profile';
+import Favourite from './screens/Favourite';
 
 
 const STACK = createStackNavigator();
@@ -19,6 +20,7 @@ const AppNavigator = () => {
             <STACK.Screen name="Signin" component={Signin}/>
             <STACK.Screen name="Home" component={Home}/>
             <STACK.Screen name="Profile" component={Profile}/>
+            <STACK.Screen name="Favourite" component={Favourite}/>
         </STACK.Navigator>
     </NavigationContainer>
   )

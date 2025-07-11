@@ -1,14 +1,22 @@
 import { View, Text, ImageBackground, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { LoaderKitView } from 'react-native-loader-kit';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/Store';
 
 const Splash = ({ navigation }: any) => {
   const [loading, setloading] = useState(true);
+  const user = useSelector((state:RootState) => state.user);
+
   useEffect(() => {
     setloading(true);
     setTimeout(() => {
       setloading(false);
-      navigation.replace('Signin');
+      if (user.isLoggedIn) {
+        navigation.replace('Profile');
+      } else {
+        navigation.replace('Signin');
+      }
     }, 1000);
   }, []);
 
@@ -25,19 +33,25 @@ const Splash = ({ navigation }: any) => {
           fontWeight: '600',
           position: 'absolute',
           bottom: '30%',
-          alignSelf:'center'
+          alignSelf: 'center',
         }}
       >
         Shop
       </Text>
-      {loading && <LoaderKitView
-        style={{ width: 30, height: 30,position:'absolute', bottom:'20%',alignSelf:'center'
-         }}
-        name={'BallPulseSync'}
-        animationSpeedMultiplier={0.8} // speed up/slow down animation, default: 1.0, larger is faster
-        color={'#e7f6fa'} // Optional: color can be: 'red', 'green',... or '#ddd', '#ffffff',...
-      />}
-      
+      {loading && (
+        <LoaderKitView
+          style={{
+            width: 30,
+            height: 30,
+            position: 'absolute',
+            bottom: '20%',
+            alignSelf: 'center',
+          }}
+          name={'BallPulseSync'}
+          animationSpeedMultiplier={0.8} // speed up/slow down animation, default: 1.0, larger is faster
+          color={'#e7f6fa'} // Optional: color can be: 'red', 'green',... or '#ddd', '#ffffff',...
+        />
+      )}
     </ImageBackground>
   );
 };

@@ -3,80 +3,101 @@ import {
   Alert,
   FlatList,
   Image,
+  RefreshControl,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import LoaderKitView from 'react-native-loader-kit';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/Store';
+import { toggleFavorite } from '../redux/slices/favouriteSlice';
+import ProductsCard from '../components/ProductsCard';
+
+
+interface Product {
+  id: number;
+  title: string;
+  image: string;
+  price: number;
+  isFav?: boolean;
+}
+
 
 const Home = () => {
   const [products, setproducts] = useState([]);
   const [loading, setloading] = useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const favourites = useSelector((state: RootState) => state.favourite.items);
+
   const fetchData = async () => {
-    setloading(true);
     try {
+      setloading(true);
       const response: any = await axios.get(
         'https://fakestoreapi.com/products',
       );
       setproducts(response.data);
     } catch (error) {
-      Alert.alert('error', 'error fetching data!');
+      Alert.alert('Error', 'Unable to fetch products.');
     } finally {
       setloading(false);
     }
   };
 
   useEffect(() => {
-    setloading(true);
     fetchData();
   }, []);
 
-  const renderItems = ({ item }: any) => (
-    <View style={styles.products}>
-      <View style={{justifyContent:'center',alignItems:'center'}}>
-        <Image
-          source={{ uri: item.image }}
-          resizeMode="contain"
-          style={{ height: 60, width: 60 }}
+  const handleToggleFavorite = (product: any) => {
+    dispatch(toggleFavorite(product));
+  };
+
+  const renderItems = useCallback(
+    ({ item }: any) => {
+      const isFav = favourites.some(fav => fav.id === item.id);
+      return (
+        <ProductsCard
+          product={{ ...item, isFav }}
+          onToggleFavourite={() => handleToggleFavorite(item)}
+          onAddToCart={() => Alert.alert('Item added to cart')}
         />
-      </View>
-      <View style={{marginLeft:30,width:'100%',alignContent:'center'}}>
-        <Text style={{fontSize:17,flexWrap:'wrap'}}>{item.title}</Text>
-        <Text style={{fontSize:12,flexWrap:'wrap'}}>{item.description}</Text>
-      </View>
-    </View>
+      );
+    },
+    [favourites],
   );
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Our Products</Text>
-      {loading === true ? (
+      {loading ? (
         <LoaderKitView
-          style={{
-            width: 30,
-            height: 30,
-            position: 'absolute',
-            bottom: '50%',
-            alignSelf: 'center',
-          }}
+          style={styles.loader}
           name={'BallClipRotate'}
-          animationSpeedMultiplier={0.8} // speed up/slow down animation, default: 1.0, larger is faster
-          color={'#1c468a'} // Optional: color can be: 'red', 'green',... or '#ddd', '#ffffff',...
+          animationSpeedMultiplier={0.8}
+          color={'#1c468a'}
         />
       ) : (
         <FlatList
+        refreshing={loading}
+        data={products}
+        keyExtractor={(item: Product) => item.id.toString()}
+        renderItem={renderItems}
+        numColumns={2}
+        contentContainerStyle={{ paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
-          refreshing={loading}
-          data={products}
-          keyExtractor={(item: any) => item.id.toString()}
-          renderItem={renderItems}
+        refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={fetchData} />
+          }
           ListEmptyComponent={() => (
             <View>
-              <Text>no element</Text>
+              <Text>No products found.</Text>
             </View>
           )}
+          initialNumToRender={6}
+          removeClippedSubviews
         />
       )}
     </View>
@@ -100,10 +121,17 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#747c8a',
   },
-  products:{
-    flexDirection:'row'
-    ,width:'95%'
-    ,justifyContent:'space-between',
-    marginTop:30
-  }
+  products: {
+    flexDirection: 'row',
+    width: '95%',
+    justifyContent: 'space-between',
+    marginTop: 30,
+  },
+  loader: {
+    width: 30,
+    height: 30,
+    position: 'absolute',
+    bottom: '50%',
+    alignSelf: 'center',
+  },
 });

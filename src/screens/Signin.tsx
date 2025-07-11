@@ -10,33 +10,47 @@ import React, { useState } from 'react';
 import RoundedButtons from '../components/RoundedButtons';
 import Header from '../components/Header';
 import { _signinWithGoogle, logout } from '../config/firebase/GoogleSignin';
-import { SignInParams } from '@react-native-google-signin/google-signin';
-// import { useDispatch } from 'react-redux';
-// import { AppDispatch } from '../redux/Store';
+import { SignInParams, SignInResponse } from '@react-native-google-signin/google-signin';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/slices/userSlice';
+import { AppDispatch } from '../redux/Store';
+
+type GoogleUser = {
+  email: string | null;
+  givenName: string | null;
+  familyName: string | null;
+  name: string | null;
+  photo: string | null;
+}
+
+type SigninResult = {
+  user:GoogleUser;
+}
 
 const Signin = ({navigation}:any) => {
   // const [data, setdata] = useState([])
-  // const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
 
   //SIGNIN
   const googleSignin = async (): Promise<void> => {
   try {
-    const res:any = await _signinWithGoogle();
+    const res:SignInResponse| null = await _signinWithGoogle();
     
-    if (!res) {
-      console.log('❌ Error: No data found');
+    if (!res || !res.data ) {
+      console.log('❌ Error: No user data found');
       return;
     }
-    const {data} = res;
+    const {user} = res.data;
+    dispatch(setUser({
+       fname: user.givenName ?? 'name not found',
+      lname: user.familyName ?? 'name not found',
+      email: user.email ?? 'email not found',
+      photoURL: user.photo ?? 'no image to display'
+    }))
 
-    console.log('✅ Successfully signed in with Google:', data?.user.name);
+    console.log('[Google Sign-In Success]', JSON.stringify(user, null, 2));
 
-    navigation.replace('Profile',{
-      image:data?.user.photo,
-      fname:data?.user.givenName,
-      lname:data?.user.familyName,
-      email:data?.user.email
-    })
+    navigation.replace('Home')
 
   } catch (error) {
     console.error('🚨 Google Sign-In failed:', error);
