@@ -1,97 +1,100 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🛍️ Shop - React Native eCommerce App
 
-# Getting Started
+> A sleek Android-only shopping experience built with React Native CLI, offering Google Sign-In, real-time product browsing, favorites, cart management, and seamless Razorpay checkout.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+![React Native](https://img.shields.io/badge/Made%20with-React%20Native-20232A?logo=react\&logoColor=61DAFB) ![Redux Toolkit](https://img.shields.io/badge/State%20Mgmt-Redux%20Toolkit-764ABC?logo=redux\&logoColor=white) ![Firebase](https://img.shields.io/badge/Auth-Firebase-FFA611?logo=firebase\&logoColor=white) ![Razorpay](https://img.shields.io/badge/Payments-Razorpay-00AFEF?logo=razorpay\&logoColor=white) ![Android](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android\&logoColor=white)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 🔥 Features
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+* **Google Sign-In** using Firebase Auth
+* **Browse Products** fetched from FakeStore API
+* **Favorites**: Add/remove products to your wishlist
+* **Cart Management**: Add, remove, increase/decrease quantity, clear cart
+* **Persistent State** with Redux Persist & AsyncStorage
+* **Checkout** via Razorpay integration (test mode)
+* **Smooth Navigation**: Stack & Bottom Tab navigators
 
-```sh
-# Using npm
-npm start
+## 🛠️ Tech Stack & Key Packages
 
-# OR using Yarn
-yarn start
-```
+| Package                                                        | Purpose                                |
+| -------------------------------------------------------------- | -------------------------------------- |
+| `react-native`                                                 | Core framework                         |
+| `@react-native-async-storage/async-storage`                    | Persist Redux state locally            |
+| `@react-native-firebase/app` & `auth`                          | Firebase setup & Google authentication |
+| `@react-native-google-signin/google-signin`                    | Google Sign-In integration             |
+| `axios`                                                        | HTTP requests to FakeStore API         |
+| `@reduxjs/toolkit` & `react-redux`                             | Simplified Redux state management      |
+| `redux-persist`                                                | Persist Redux slices across restarts   |
+| `@react-navigation/native`, `stack`, `bottom-tabs`             | App navigation                         |
+| `react-native-razorpay`                                        | Razorpay payment gateway               |
+| `react-native-vector-icons`                                    | Icons for UI elements                  |
+| `react-native-loader-kit`                                      | Loading animations                     |
+| `react-native-reanimated` & `carousel`                         | Animated carousel components           |
+| `react-native-safe-area-context`, `screens`, `gesture-handler` | Navigation dependencies                |
 
-## Step 2: Build and run your app
+## 🚀 Getting Started
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+1. **Clone the repository**
 
-### Android
+   ```bash
+   git clone https://github.com/<your-username>/shop.git
+   cd shop
+   ```
 
-```sh
-# Using npm
-npm run android
+2. **Install dependencies**
 
-# OR using Yarn
-yarn android
-```
+   ```bash
+   npm install
+   npx pod-install      # if building for iOS in future
+   ```
 
-### iOS
+3. **Configure Firebase & Razorpay**
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+   * Create your own Firebase project at [https://console.firebase.google.com/](https://console.firebase.google.com/)
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+     * Enable Google Sign-In in **Authentication > Sign-in method**
+     * Copy your **Android** app configuration (`google-services.json`) into `android/app/`
 
-```sh
-bundle install
-```
+   * Sign up on Razorpay Dashboard: [https://dashboard.razorpay.com/](https://dashboard.razorpay.com/)
 
-Then, and every time you update your native dependencies, run:
+     * Copy your **Test** Key ID & Key Secret
 
-```sh
-bundle exec pod install
-```
+4. **Run the app**
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+   ```bash
+   npx react-native run-android
+   ```
 
-```sh
-# Using npm
-npm run ios
+> **Note**: This project is currently Android-only. iOS support coming soon.
 
-# OR using Yarn
-yarn ios
-```
+## 🔑 Roadmap: Obtaining API Keys
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+1. **Firebase**
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+   * Go to Firebase Console → Add project → Register Android app → Download `google-services.json`
+   * Place `google-services.json` in `android/app/`
 
-## Step 3: Modify your app
+2. **Razorpay**
 
-Now that you have successfully run the app, let's make changes!
+   * Sign up / Log in at Razorpay Dashboard
+   * Navigate to **Settings > API Keys** → Generate **Test** Key pair
+   * Copy **Key ID** & **Key Secret** into your app (you can store them in code or an env)
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## 📈 Future Roadmap
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+* 🔹 iOS app support
+* 🔹 Product **Search** functionality
+* 🔹 Category-wise **Filtering** & Sorting
+* 🔹 Order History screen
+* 🔹 Push Notifications for offers
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## 🤝 Connect with Me
 
-## Congratulations! :tada:
+* LinkedIn: [tripathi-rishabh](https://www.linkedin.com/in/tripathi-rishabh)
+* Portfolio: [rishabhtripathiportfolio.vercel.app](https://rishabhtripathiportfolio.vercel.app/)
 
-You've successfully run and modified your React Native App. :partying_face:
+---
 
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+*Crafted with ❤️ by Rishabh Tripathi*
