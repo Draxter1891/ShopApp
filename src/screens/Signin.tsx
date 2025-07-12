@@ -50,7 +50,7 @@ const Signin = ({navigation}:any) => {
 
     console.log('[Google Sign-In Success]', JSON.stringify(user, null, 2));
 
-    navigation.replace('Home')
+    navigation.replace('Main')
 
   } catch (error) {
     console.error('🚨 Google Sign-In failed:', error);
@@ -60,7 +60,7 @@ const Signin = ({navigation}:any) => {
 };
   return (
     <View style={styles.container}>
-      <Header style={styles.logo} text={"Shop."}/>
+      <Header text={"Shop."}/>
       <Text style={styles.heading}>Hello!</Text>
       <Text style={styles.subheading}>Welcome to our shop.</Text>
       <View style={styles.btnContainer}>
@@ -109,11 +109,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#e7f6fa',
-  },
-  logo:{
-    fontSize:35,
-    fontWeight:'bold',
-    color:'#1e4266'
   },
   heading: {
     fontSize: 35,

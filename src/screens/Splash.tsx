@@ -13,7 +13,7 @@ const Splash = ({ navigation }: any) => {
     setTimeout(() => {
       setloading(false);
       if (user.isLoggedIn) {
-        navigation.replace('Cart');
+        navigation.replace('Main');
       } else {
         navigation.replace('Signin');
       }

@@ -15,15 +15,16 @@ import {
   removeFromCart,
   calculateTotal,
   clearCart,
-} from '../redux/slices/cartSlice';
-import { RootState, AppDispatch } from '../redux/Store';
+} from '../../redux/slices/cartSlice';
+import { RootState, AppDispatch } from '../../redux/Store';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { startPayment } from '../config/razorpay/razorpayUtils';
+import { startPayment } from '../../config/razorpay/razorpayUtils';
+import Header from '../../components/Header';
 
 const CartScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { cartItems, totalAmount } = useSelector(
-    (state: RootState) => state.cart
+    (state: RootState) => state.cart,
   );
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const CartScreen = () => {
         <Text style={styles.title} numberOfLines={1}>
           {item.title}
         </Text>
-        <Text style={styles.price}>₹ {item.price}</Text>
+        <Text style={styles.price}>₹ {item.price.toFixed(2)}</Text>
 
         <View style={styles.qtyContainer}>
           <TouchableOpacity
@@ -77,39 +78,46 @@ const CartScreen = () => {
     </View>
   );
 
-    const handlePayment = async () => {
-      try {
-        const data = await startPayment({
-          amount: totalAmount,
-          name: 'Rishabh Tripathi',
-          email: 'trishabh2001@gmail.com',
-        });
-        dispatch(clearCart());
-        Alert.alert('Payment Successful');
-      } catch (error: any) {
-        Alert.alert('Something went wrong please try again.');
-      }
-    };
-  
+  const handlePayment = async () => {
+    try {
+      const data = await startPayment({
+        amount: totalAmount,
+        name: 'Rishabh Tripathi',
+        email: 'trishabh2001@gmail.com',
+      });
+      dispatch(clearCart());
+      Alert.alert('Payment Successful');
+    } catch (error: any) {
+      Alert.alert('Something went wrong. Please try again.');
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Your Cart</Text>
+      <View style={styles.topHeader}>
+        <Header text={'Shop.'} />
+        <Text style={styles.heading}>Your Cart</Text>
+      </View>
 
       {cartItems.length === 0 ? (
         <View style={styles.emptyCart}>
-          <Text style={{ fontSize: 18, color: '#888' }}>🛒 Cart is empty</Text>
+          <Text style={styles.emptyText}>🛒 Your cart is empty</Text>
+          <Text style={styles.subText}>Start adding some items!</Text>
         </View>
       ) : (
         <>
           <FlatList
             data={cartItems}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={item => item.id.toString()}
             renderItem={renderItem}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 20 }}
           />
 
           <View style={styles.footer}>
-            <Text style={styles.totalText}>Total: ₹ {totalAmount.toFixed(2)}</Text>
+            <Text style={styles.totalText}>
+              Total: ₹ {totalAmount.toFixed(2)}
+            </Text>
             <TouchableOpacity
               style={styles.checkoutBtn}
               onPress={handlePayment}
@@ -128,73 +136,94 @@ export default CartScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#f9faff',
   },
+  topHeader: {
+   flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingHorizontal: 16,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderColor: '#e3e7f1',
+    elevation: 2,
+    marginBottom:10
+  },
+
   heading: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '700',
-    color: '#7494f4',
-    marginBottom: 15,
+    color: '#5a72ee',
+    marginVertical: 15,
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     padding: 12,
-    marginBottom: 10,
+    marginBottom: 12,
     borderRadius: 12,
-    elevation: 3,
+    elevation: 2,
     alignItems: 'center',
+    gap: 10,
   },
   image: {
     height: 60,
     width: 60,
     resizeMode: 'contain',
+    borderRadius: 6,
   },
   details: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: 10,
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#333',
   },
   price: {
     fontSize: 14,
-    color: '#555',
-    marginVertical: 4,
+    color: '#666',
+    marginTop: 2,
   },
   qtyContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 6,
   },
   qtyBtn: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#dcdff1',
     padding: 6,
     borderRadius: 6,
+    marginHorizontal: 5,
   },
   qtyText: {
-    marginHorizontal: 10,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
+    minWidth: 24,
+    textAlign: 'center',
   },
   footer: {
     backgroundColor: '#fff',
-    padding: 15,
+    padding: 16,
     borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    borderColor: '#e6e6e6',
     borderRadius: 10,
-    marginTop: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 4,
   },
   totalText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
-    color: '#000',
+    color: '#2b2b2b',
   },
   checkoutBtn: {
-    marginTop: 10,
-    backgroundColor: '#3f407cff',
+    marginTop: 12,
+    backgroundColor: '#3f407c',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -206,7 +235,17 @@ const styles = StyleSheet.create({
   },
   emptyCart: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#a0a0a0',
+  },
+  subText: {
+    marginTop: 4,
+    fontSize: 14,
+    color: '#8f9bb3',
   },
 });

@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { FC } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -35,9 +35,9 @@ const ProductsCard: FC<Props> = ({
       <Text numberOfLines={2} style={styles.title}>{product.title}</Text>
       <Text style={styles.price}>₹ {product.price.toFixed(2)}</Text>
 
-      <TouchableOpacity style={styles.cartBtn} onPress={() => onAddToCart(product)}>
+      <TouchableHighlight style={styles.cartBtn} onPress={() => onAddToCart(product)} activeOpacity={0.8} underlayColor={'#bcbdf6'}>
         <Text style={styles.cartText}>Add to Cart</Text>
-      </TouchableOpacity>
+      </TouchableHighlight>
     </View>
   );
 };
@@ -82,13 +82,13 @@ const styles = StyleSheet.create({
   },
   cartBtn: {
     marginTop: 6,
-    backgroundColor: '#222',
+    backgroundColor: '#d8e8f6',
     paddingVertical: 6,
     borderRadius: 6,
     alignItems: 'center',
   },
   cartText: {
-    color: '#fff',
+    color: '#000',
     fontSize: 13,
     fontWeight: '600',
   },
