@@ -12,6 +12,8 @@ import { AppDispatch, RootState } from '../../redux/Store';
 import ProductsCard from '../../components/ProductsCard';
 import { toggleFavorite } from '../../redux/slices/favouriteSlice';
 import Header from '../../components/Header';
+import { addToCart } from '../../redux/slices/cartSlice';
+import CustomModal from '../../components/CustomModal';
 
 interface Product {
   id: number;
@@ -24,11 +26,17 @@ interface Product {
 const Favourite = () => {
   const dispatch = useDispatch<AppDispatch>();
   const favorites = useSelector((state: RootState) => state.favourite.items);
-  const user = useSelector((state: RootState) => state.user);
+  const [showModal, setShowModal] = React.useState(false);
+  const [modalMessage, setModalMessage] = React.useState('');
 
   const handleToggleFav = (product: Product) =>
     dispatch(toggleFavorite(product));
 
+  const handleAddToCart = (item: Product) => {
+    dispatch(addToCart(item));
+    setModalMessage('Item added to cart');
+    setShowModal(true);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -36,7 +44,6 @@ const Favourite = () => {
         <Text style={styles.heading}>Favourites</Text>
       </View>
 
-     
       <View style={styles.content}>
         {favorites.length === 0 ? (
           <View style={styles.emptyContainer}>
@@ -45,13 +52,11 @@ const Favourite = () => {
         ) : (
           <FlatList
             data={favorites}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (
               <ProductsCard
                 product={item}
-                onAddToCart={() => {
-                  Alert.alert('Item added to cart');
-                }}
+                onAddToCart={() => handleAddToCart(item)}
                 onToggleFavourite={() => handleToggleFav(item)}
               />
             )}
@@ -63,6 +68,14 @@ const Favourite = () => {
           />
         )}
       </View>
+      <CustomModal
+      title='Success'
+        visible={showModal}
+        message={modalMessage}
+        mode="alert"
+        onCancel={() => setShowModal(false)}
+        onConfirm={() => setShowModal(false)}
+      />
     </View>
   );
 };

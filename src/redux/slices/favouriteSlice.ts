@@ -5,6 +5,7 @@ interface Product {
     title: string;
     image: string;
     price: number;
+    isFav?: boolean;
 }
 
 interface FavouriteState {
@@ -16,13 +17,13 @@ const initialState: FavouriteState = {
 }
 
 const favouriteSlice = createSlice({
-    name: 'favourite'
-    , initialState,
+    name: 'favourite',
+    initialState,
     reducers: {
         addToFavourite: (state, action: PayloadAction<Product>) => {
             const exists = state.items.find(item => item.id === action.payload.id);
             if (!exists) {
-                state.items.push(action.payload);
+                state.items.push({ ...action.payload, isFav: true });  // ✅ Mark as true when adding
             }
         },
         removeFromFavourites: (state, action: PayloadAction<number>) => {
@@ -33,7 +34,7 @@ const favouriteSlice = createSlice({
             if (exists) {
                 state.items = state.items.filter(item => item.id !== action.payload.id);
             } else {
-                state.items.push(action.payload);
+                state.items.push({ ...action.payload, isFav: true });
             }
         },
         clearFavorites: (state) => {

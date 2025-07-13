@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   increaseQty,
@@ -20,29 +20,50 @@ import { RootState, AppDispatch } from '../../redux/Store';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { startPayment } from '../../config/razorpay/razorpayUtils';
 import Header from '../../components/Header';
+import CustomModal from '../../components/CustomModal';
 
 const CartScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { cartItems, totalAmount } = useSelector(
     (state: RootState) => state.cart,
   );
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalMode, setModalMode] = useState<'alert' | 'confirm'>('alert');
+  const [onConfirmModal, setOnConfirmModal] = useState(() => () => {});
 
   useEffect(() => {
     dispatch(calculateTotal());
   }, [cartItems]);
 
   const handleRemove = (id: number) => {
-    Alert.alert('Remove Item', 'Are you sure you want to remove this item?', [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Remove',
-        onPress: () => dispatch(removeFromCart(id)),
-        style: 'destructive',
-      },
-    ]);
+    setShowModal(true);
+    setModalMode('confirm');
+    setModalMessage('Are you sure you want to remove this item?');
+    setOnConfirmModal(() => () => {
+      dispatch(removeFromCart(id));
+      setShowModal(false);
+    });
+  };
+
+  const handlePayment = async () => {
+    try {
+      await startPayment({
+        amount: totalAmount,
+        name: 'Rishabh Tripathi',
+        email: 'trishabh2001@gmail.com',
+      });
+      dispatch(clearCart());
+      setOnConfirmModal(() => () => setShowModal(false));
+      setModalMessage('Payment Successful');
+      setModalMode('alert');
+      setShowModal(true);
+    } catch (error: any) {
+      setShowModal(true);
+      setOnConfirmModal(() => () => setShowModal(false));
+      setModalMode('alert');
+      setModalMessage('Something went wrong. Please try again.');
+    }
   };
 
   const renderItem = ({ item }: any) => (
@@ -77,20 +98,6 @@ const CartScreen = () => {
       </TouchableOpacity>
     </View>
   );
-
-  const handlePayment = async () => {
-    try {
-      const data = await startPayment({
-        amount: totalAmount,
-        name: 'Rishabh Tripathi',
-        email: 'trishabh2001@gmail.com',
-      });
-      dispatch(clearCart());
-      Alert.alert('Payment Successful');
-    } catch (error: any) {
-      Alert.alert('Something went wrong. Please try again.');
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -127,6 +134,14 @@ const CartScreen = () => {
           </View>
         </>
       )}
+      <CustomModal
+        title={modalMode === 'alert' ? 'Notice' : 'Confirmation'}
+        visible={showModal}
+        message={modalMessage}
+        mode={modalMode}
+        onCancel={() => setShowModal(false)}
+        onConfirm={() => onConfirmModal()}
+      />
     </View>
   );
 };
@@ -139,7 +154,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9faff',
   },
   topHeader: {
-   flexDirection: 'row',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 10,
@@ -149,7 +164,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#e3e7f1',
     elevation: 2,
-    marginBottom:10
+    marginBottom: 10,
   },
 
   heading: {

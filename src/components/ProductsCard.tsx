@@ -1,6 +1,8 @@
 import { Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { FC } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/Store';
 
 interface Product {
   id: number;
@@ -13,6 +15,7 @@ interface Props {
   product: Product;
   onToggleFavourite: (product: Product) => void;
   onAddToCart: (product: Product) => void;
+  
 }
 
 const ProductsCard: FC<Props> = ({

@@ -17,7 +17,7 @@ export const startPayment = ({
 }) => {
   const options: any = {
     description,
-    image: 'https://drive.google.com/uc?export=view&id=1xQLIg-QAQyeauAAXBZ0YeUEn7fMS9jAk',
+    image: 'https://res.cloudinary.com/ddj0ypazu/image/upload/v1752393607/play_store_512_iehxdi.png',
     currency,
     key: 'rzp_test_928yd8fXq9Ph5E',
     amount: amount * 100,

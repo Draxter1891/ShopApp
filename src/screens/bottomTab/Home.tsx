@@ -17,6 +17,7 @@ import ProductsCard from '../../components/ProductsCard';
 import { addToCart } from '../../redux/slices/cartSlice';
 import CustomCarousel from '../../components/CustomCarousel';
 import Header from '../../components/Header';
+import CustomModal from '../../components/CustomModal';
 
 interface Product {
   id: number;
@@ -29,25 +30,30 @@ interface Product {
 const Home = ({ navigation }: { navigation: any }) => {
   const [products, setproducts] = useState([]);
   const [loading, setloading] = useState(false);
-  const [categories, setCategories] = useState([]);
-
+  // const [categories, setCategories] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const favourites = useSelector((state: RootState) => state.favourite.items);
   const user = useSelector((state: RootState) => state.user);
 
-  const fetchCategories = async () => {
-    try {
-      const res = await axios.get('https://fakestoreapi.com/products/categories');
-      setCategories(res.data);
-    } catch (err) {
-      console.log('Error fetching categories', err);
-    }
-  };
+  // const fetchCategories = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       'https://fakestoreapi.com/products/categories',
+  //     );
+  //     setCategories(res.data);
+  //   } catch (err) {
+  //     console.log('Error fetching categories', err);
+  //   }
+  // };
 
   const fetchData = async () => {
     try {
       setloading(true);
-      const response: any = await axios.get('https://fakestoreapi.com/products');
+      const response: any = await axios.get(
+        'https://fakestoreapi.com/products',
+      );
       setproducts(response.data);
     } catch (error) {
       Alert.alert('Error', 'Unable to fetch products.');
@@ -56,29 +62,33 @@ const Home = ({ navigation }: { navigation: any }) => {
     }
   };
 
-  const fetchProductsByCategory = async (category: string) => {
-    setloading(true);
-    try {
-      const res = await axios.get(
-        `https://fakestoreapi.com/products/category/${category}`
-      );
-      setproducts(res.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setloading(false);
-    }
-  };
+  // const fetchProductsByCategory = async (category: string) => {
+  //   setloading(true);
+  //   try {
+  //     const res = await axios.get(
+  //       `https://fakestoreapi.com/products/category/${category}`,
+  //     );
+  //     setproducts(res.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     setloading(false);
+  //   }
+  // };
 
   useEffect(() => {
     fetchData();
-    fetchCategories();
+    // fetchCategories();
   }, []);
 
   const handleToggleFavorite = (product: Product) => {
     dispatch(toggleFavorite(product));
   };
-
+  const handleAddToCart = (item: Product) => {
+    dispatch(addToCart(item));
+    setModalMessage('Item added to cart');
+    setShowModal(true);
+  };
   const renderItems = useCallback(
     ({ item }: any) => {
       const isFav = favourites.some(fav => fav.id === item.id);
@@ -86,18 +96,17 @@ const Home = ({ navigation }: { navigation: any }) => {
         <ProductsCard
           product={{ ...item, isFav }}
           onToggleFavourite={() => handleToggleFavorite(item)}
-          onAddToCart={() => dispatch(addToCart(item))}
+          onAddToCart={handleAddToCart}
         />
       );
     },
-    [favourites]
+    [favourites],
   );
 
   return (
     <View style={styles.container}>
-    
       <View style={styles.header}>
-       <Header text="Shop." />
+        <Header text="Shop." />
         <TouchableOpacity
           onPress={() => navigation.navigate('Profile')}
           activeOpacity={0.7}
@@ -107,12 +116,10 @@ const Home = ({ navigation }: { navigation: any }) => {
         </TouchableOpacity>
       </View>
 
-      
       <View style={styles.carouselContainer}>
         <CustomCarousel />
       </View>
 
-      
       {loading ? (
         <LoaderKitView
           style={styles.loader}
@@ -141,6 +148,14 @@ const Home = ({ navigation }: { navigation: any }) => {
           removeClippedSubviews
         />
       )}
+      <CustomModal
+        title="Success"
+        visible={showModal}
+        message={modalMessage}
+        mode="alert"
+        onCancel={() => setShowModal(false)}
+        onConfirm={() => setShowModal(false)}
+      />
     </View>
   );
 };
