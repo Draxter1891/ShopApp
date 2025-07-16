@@ -82,10 +82,9 @@
    * Navigate to **Settings > API Keys** → Generate **Test** Key pair
    * Copy **Key ID** & **Key Secret** into your app (you can store them in code or an env)
 
-## 📲 APK Download
-* 🔹 You can find the latest .apk inside the /app directory.
-* 🔹 Simply download and install on your Android device.
-
+### Testable APK
+📱 **[Download the latest APK from Releases](https://github.com/Draxter1891/ShopApp/releases)**
+---
 ## 📈 Future Roadmap
 
 * 🔹 iOS app support
