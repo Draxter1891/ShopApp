@@ -1,5 +1,7 @@
 # 🛍️ Shop - React Native eCommerce App
 
+![AppLogo](./src/assets/images/ShopAppLogo.png)
+
 > A sleek Android-only shopping experience built with React Native CLI, offering Google Sign-In, real-time product browsing, favorites, cart management, and seamless Razorpay checkout.
 
 ---
@@ -82,8 +84,8 @@
    * Navigate to **Settings > API Keys** → Generate **Test** Key pair
    * Copy **Key ID** & **Key Secret** into your app (you can store them in code or an env)
 
-### Testable APK
-📱 **[Download the latest APK from Releases](https://github.com/Draxter1891/ShopApp/releases)**
+## Testable APK
+### 📱 **[Download the latest APK from Releases](https://github.com/Draxter1891/ShopApp/releases)**
 ---
 ## 📈 Future Roadmap
 
